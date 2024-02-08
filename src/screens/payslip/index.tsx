@@ -1,10 +1,23 @@
 import { FC, useState } from "react";
 import { AdaptativeModal } from "../../common/AdaptativeModal";
 import { Payslip } from "../../types";
-import { Button, Text, Link, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Text,
+  Link,
+  VStack,
+  CircularProgress,
+  Divider,
+  Stat,
+  StatLabel,
+  StatNumber,
+  Icon,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { Capacitor } from "@capacitor/core";
 import downloadAndSaveFile from "./downloadAndSaveFile";
 import { Toast } from "@capacitor/toast";
+import { CloseIcon, DownloadIcon, TimeIcon, InfoIcon } from "@chakra-ui/icons";
 
 type Props = {
   selectedPayslip: Payslip | null;
@@ -30,36 +43,67 @@ const PayslipModal: FC<Props> = ({ selectedPayslip, onClose }) => {
     }
   };
 
+  const textColor = useColorModeValue("gray.600", "gray.200");
+
   return (
     <AdaptativeModal isOpen={!!selectedPayslip} onClose={onClose}>
-      <VStack spacing={4} align="stretch">
-        <Text fontSize="xl" fontWeight="bold">
+      <VStack p={8} spacing={5} align="stretch">
+        <Text fontSize="2xl" fontWeight="bold" color="teal.500">
           Payslip Details
         </Text>
-        <Text fontSize="md">{selectedPayslip?.id}</Text>
-        <Text fontSize="md">
-          {selectedPayslip?.fromDate} - {selectedPayslip?.toDate}
-        </Text>
+        <Divider />
+        <Stat>
+          <StatLabel color={textColor}>
+            <Icon as={InfoIcon} mr={2} />
+            Payslip ID
+          </StatLabel>
+          <StatNumber>{selectedPayslip?.id}</StatNumber>
+        </Stat>
+        <Stat>
+          <StatLabel color={textColor}>
+            <Icon as={TimeIcon} mr={2} />
+            Period
+          </StatLabel>
+          <StatNumber>
+            {selectedPayslip?.fromDate} - {selectedPayslip?.toDate}
+          </StatNumber>
+        </Stat>
+        <Divider />
         {Capacitor.isNativePlatform() ? (
           <Button
+            leftIcon={
+              isDownloading ? (
+                <CircularProgress
+                  isIndeterminate
+                  size="24px"
+                  color="blue.500"
+                />
+              ) : (
+                <DownloadIcon />
+              )
+            }
             onClick={() =>
               selectedPayslip && onDownloadPayslip(selectedPayslip)
             }
+            colorScheme="teal"
             isLoading={isDownloading}
             loadingText="Downloading..."
-            colorScheme="blue"
-            m={4}
           >
             Download Payslip
           </Button>
         ) : (
-          <Link href={selectedPayslip?.file} isExternal download>
-            <Button m={4} colorScheme="blue">
+          <Link href={selectedPayslip?.file} isExternal>
+            <Button leftIcon={<DownloadIcon />} colorScheme="teal">
               Download Payslip
             </Button>
           </Link>
         )}
-        <Button onClick={onClose} m={4} variant="ghost">
+        <Button
+          onClick={onClose}
+          leftIcon={<CloseIcon />}
+          variant="outline"
+          colorScheme="teal"
+        >
           Close
         </Button>
       </VStack>

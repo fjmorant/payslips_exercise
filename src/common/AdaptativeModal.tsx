@@ -4,7 +4,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
 import { FC } from "react";
@@ -33,7 +32,6 @@ const AdaptativeModal: FC<Props> = ({ isOpen, onClose, children }) => {
     <Modal onClose={onClose} size={"lg"} isOpen={isOpen}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Modal Title</ModalHeader>
         <ModalCloseButton />
         <ModalBody>{children}</ModalBody>
       </ModalContent>
