@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { Home } from "./Home";
+import { Home } from "./screens/home";
 import { ChakraProvider } from "@chakra-ui/react";
 
 const root = ReactDOM.createRoot(
