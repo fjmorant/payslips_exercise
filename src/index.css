@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding: 1em 1em calc(1em + env(safe-area-inset-bottom));
 }
 
 code {
