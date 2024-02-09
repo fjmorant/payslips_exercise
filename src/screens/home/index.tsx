@@ -10,14 +10,16 @@ import {
 } from "@chakra-ui/react";
 import { FC, useCallback, useState } from "react";
 import { Payslip } from "../../types";
-import { payslips } from "../../api/payslips";
+import { payslips as payslipsData } from "../../api/payslips";
 import { PayslipModal } from "../payslip-modal";
 import { ViewIcon } from "@chakra-ui/icons";
 import { FaIdCard } from "react-icons/fa";
 import { strings } from "../../strings";
 
 const Home: FC = () => {
+  const [payslips] = useState<Payslip[]>(payslipsData);
   const [selectedPayslip, setSelectedPayslip] = useState<Payslip | null>(null);
+
   const bgGradient = useColorModeValue(
     "linear(to-br, teal.50, blue.50)",
     "linear(to-br, teal.700, blue.700)"
@@ -57,12 +59,12 @@ const Home: FC = () => {
       >
         {payslips.map((payslip) => (
           <Box
+            onTouchStart={() => onOpenModal(payslip)}
             key={payslip.id}
             p={4}
             shadow="md"
             borderRadius="md"
             bg={boxBackgroundColor}
-            _hover={{ shadow: "lg" }}
           >
             <Badge colorScheme="teal" p={2} borderRadius="lg">
               <Icon as={FaIdCard} mr={2} />
