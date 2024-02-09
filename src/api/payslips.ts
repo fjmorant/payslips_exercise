@@ -1,4 +1,4 @@
-import { Payslip } from "./types";
+import { Payslip } from "../types";
 
 const samplePdf = "https://filesamples.com/samples/document/pdf/sample1.pdf";
 const payslips: Payslip[] = [

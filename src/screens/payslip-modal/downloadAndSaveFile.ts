@@ -1,17 +1,18 @@
 import { Filesystem, Directory } from "@capacitor/filesystem";
 
-async function downloadAndSaveFile(url: string, fileName: string) {
+const downloadAndSaveFile = async (url: string, fileName: string) => {
   try {
-    const response = await Filesystem.downloadFile({
+    await Filesystem.downloadFile({
       url,
       path: fileName,
       directory: Directory.Documents,
     });
 
-    console.log("File saved successfully: ", response.path);
+    return true;
   } catch (error: any) {
     console.error("Error saving file:", error.message);
+    return false;
   }
-}
+};
 
-export default downloadAndSaveFile;
+export { downloadAndSaveFile };

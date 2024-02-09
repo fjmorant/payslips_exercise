@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { AdaptativeModal } from "../../common/AdaptativeModal";
 import { Payslip } from "../../types";
 import {
@@ -15,9 +15,10 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Capacitor } from "@capacitor/core";
-import downloadAndSaveFile from "./downloadAndSaveFile";
+import { downloadAndSaveFile } from "./downloadAndSaveFile";
 import { Toast } from "@capacitor/toast";
 import { CloseIcon, DownloadIcon, TimeIcon, InfoIcon } from "@chakra-ui/icons";
+import { strings } from "../../strings";
 
 type Props = {
   selectedPayslip: Payslip | null;
@@ -26,43 +27,57 @@ type Props = {
 
 const PayslipModal: FC<Props> = ({ selectedPayslip, onClose }) => {
   const [isDownloading, setIsDownloading] = useState(false);
-
-  const onDownloadPayslip = async (payslip: Payslip) => {
-    setIsDownloading(true);
-    try {
-      await downloadAndSaveFile(payslip.file, `Payslip-${payslip.id}.pdf`);
-      Toast.show({
-        text: "Successfully downloaded payslip. Check with your files app.",
-      });
-    } catch (error) {
-      Toast.show({
-        text: "There was an issue downloading the payslip.",
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
   const textColor = useColorModeValue("gray.600", "gray.200");
+
+  const onPressDownload = useCallback(() => {
+    const onDownloadPayslip = async (payslip: Payslip) => {
+      setIsDownloading(true);
+      try {
+        const result = await downloadAndSaveFile(
+          payslip.file,
+          `Payslip-${payslip.id}.pdf`
+        );
+
+        if (!result) {
+          Toast.show({
+            text: strings.error_download,
+          });
+        }
+        Toast.show({
+          text: strings.success_download,
+        });
+      } catch (error) {
+        Toast.show({
+          text: strings.error_download,
+        });
+      } finally {
+        setIsDownloading(false);
+      }
+    };
+
+    if (selectedPayslip) {
+      onDownloadPayslip(selectedPayslip);
+    }
+  }, [selectedPayslip]);
 
   return (
     <AdaptativeModal isOpen={!!selectedPayslip} onClose={onClose}>
       <VStack p={8} spacing={5} align="stretch">
         <Text fontSize="2xl" fontWeight="bold" color="teal.500">
-          Payslip Details
+          {strings.titles.details}
         </Text>
         <Divider />
         <Stat>
           <StatLabel color={textColor}>
             <Icon as={InfoIcon} mr={2} />
-            Payslip ID
+            {strings.labels.payslip_id}
           </StatLabel>
           <StatNumber>{selectedPayslip?.id}</StatNumber>
         </Stat>
         <Stat>
           <StatLabel color={textColor}>
             <Icon as={TimeIcon} mr={2} />
-            Period
+            {strings.labels.period}
           </StatLabel>
           <StatNumber>
             {selectedPayslip?.fromDate} - {selectedPayslip?.toDate}
@@ -82,19 +97,16 @@ const PayslipModal: FC<Props> = ({ selectedPayslip, onClose }) => {
                 <DownloadIcon />
               )
             }
-            onClick={() =>
-              selectedPayslip && onDownloadPayslip(selectedPayslip)
-            }
+            onClick={onPressDownload}
             colorScheme="teal"
             isLoading={isDownloading}
-            loadingText="Downloading..."
           >
-            Download Payslip
+            {strings.buttons.download_payslip}
           </Button>
         ) : (
           <Link href={selectedPayslip?.file} isExternal>
             <Button leftIcon={<DownloadIcon />} colorScheme="teal">
-              Download Payslip
+              {strings.buttons.download_payslip}
             </Button>
           </Link>
         )}
@@ -104,7 +116,7 @@ const PayslipModal: FC<Props> = ({ selectedPayslip, onClose }) => {
           variant="outline"
           colorScheme="teal"
         >
-          Close
+          {strings.buttons.close}
         </Button>
       </VStack>
     </AdaptativeModal>

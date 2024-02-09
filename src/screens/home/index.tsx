@@ -8,14 +8,15 @@ import {
   Badge,
   Icon,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { Payslip } from "../../types";
-import { payslips } from "../../payslips";
-import { PayslipModal } from "../payslip";
+import { payslips } from "../../api/payslips";
+import { PayslipModal } from "../payslip-modal";
 import { ViewIcon } from "@chakra-ui/icons";
 import { FaIdCard } from "react-icons/fa";
+import { strings } from "../../strings";
 
-const Home = () => {
+const Home: FC = () => {
   const [selectedPayslip, setSelectedPayslip] = useState<Payslip | null>(null);
   const bgGradient = useColorModeValue(
     "linear(to-br, teal.50, blue.50)",
@@ -24,13 +25,13 @@ const Home = () => {
 
   const boxBackgroundColor = useColorModeValue("white", "gray.800");
 
-  const onOpenModal = (payslip: Payslip) => {
+  const onOpenModal = useCallback((payslip: Payslip) => {
     setSelectedPayslip(payslip);
-  };
+  }, []);
 
-  const onCloseModal = () => {
+  const onCloseModal = useCallback(() => {
     setSelectedPayslip(null);
-  };
+  }, []);
 
   return (
     <Box
@@ -47,11 +48,11 @@ const Home = () => {
         textAlign="center"
         color="teal.600"
       >
-        Payslips
+        {strings.titles.list}
       </Text>
       <SimpleGrid
         columns={{ sm: 1, md: 2, lg: 3 }}
-        spacing={5}
+        spacing={4}
         paddingBottom="env(safe-area-inset-bottom)"
       >
         {payslips.map((payslip) => (
@@ -75,7 +76,7 @@ const Home = () => {
                 onClick={() => onOpenModal(payslip)}
                 mr={2}
               >
-                View
+                {strings.buttons.view}
               </Button>
             </Flex>
           </Box>
