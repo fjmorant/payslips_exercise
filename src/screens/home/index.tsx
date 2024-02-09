@@ -35,7 +35,7 @@ const Home: FC = () => {
 
   return (
     <Box
-      paddingTop="env(safe-area-inset-top)"
+      paddingTop="calc(20px + env(safe-area-inset-top))"
       paddingBottom="env(safe-area-inset-bottom)"
       paddingX={3}
       bgGradient={bgGradient}

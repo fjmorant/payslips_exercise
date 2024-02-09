@@ -46,7 +46,7 @@ const PayslipModal: FC<Props> = ({ selectedPayslip, onClose }) => {
         Toast.show({
           text: strings.success_download,
         });
-      } catch (error) {
+      } catch (error: any) {
         Toast.show({
           text: strings.error_download,
         });

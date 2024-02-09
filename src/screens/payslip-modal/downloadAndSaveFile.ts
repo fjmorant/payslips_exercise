@@ -10,7 +10,6 @@ const downloadAndSaveFile = async (url: string, fileName: string) => {
 
     return true;
   } catch (error: any) {
-    console.error("Error saving file:", error.message);
     return false;
   }
 };

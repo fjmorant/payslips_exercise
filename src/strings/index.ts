@@ -1,6 +1,7 @@
 const strings = {
   error_download: "There was an issue downloading the payslip.",
-  success_download: "There was an issue downloading the payslip.",
+  success_download:
+    "Payslip downloaded, check with Files app in Dowload folder.",
   titles: {
     list: "Payslips",
     details: "Payslip Details",
